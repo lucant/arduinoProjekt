@@ -28,7 +28,7 @@ int delayval = 2;
  */
 void setup()
 {
-  Serial.begin(9600);                  // Random RGB values for every Signal from microphone
+  Serial.begin(9600);                  // Init Serial 
   pixels.begin();                      // Init LED Strip
   pixels.show();                       // Start them with all LEDs off at the beginning
   pinMode(MICRO, INPUT);               // Microphone
