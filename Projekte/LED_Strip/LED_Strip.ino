@@ -2,7 +2,7 @@
 #include <avr/power.h>
 
 #define LED_DATA 5       // Pin on which to control LED strip
-#define NUMPIXELS 60     // Mumber of Pixels on the LED strip
+#define NUMPIXELS 60     // Number of Pixels on the LED strip
 #define MAXBRIGHTNESS 10 // Change this value to determine brightness of LED strip
 #define RGB_SPACE 255    // Maximum value of RGB address space
 #define MICRO 3          // Pin to get signal from microphone
