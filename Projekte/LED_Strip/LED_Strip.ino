@@ -23,7 +23,12 @@ int soundSignal = LOW; // variable to save microphone signal
 // Aux variables for displaying different modes
 int middle = NUMPIXELS / 2; // Identify middle pixel
 int delayval = 1;           // Determines how long a delay between a switch should be
-int MODE = 5;               // Switches between different modes
+
+/**  TODO:
+ *    - Mode ist static right now
+ *    - Determine way to switch modes (e.g. Button, Remote Control)
+ */
+int MODE = 9; // Switches between different modes
 
 // Fade variables
 uint32_t fadeRGBColor = pixels.Color(0, 0, 0); // initiliaze fader color
@@ -31,18 +36,28 @@ uint8_t redNew = 255;                          // start from red
 uint8_t greenNew = 0;                          // initialize 0 to fade into
 uint8_t blueNew = 0;                           // initialize 0 to fade into
 int fadeStatus = 0;                            // switches the RGB fade
-int stepsize = 2;                              // defines velocity of fade
+int stepsize = 5;                              // defines velocity of fade, must be odd number!
 
 /**
   Code for initialisation
 */
 void setup()
 {
-  Serial.begin(9600);                  // Init Serial
-  pixels.begin();                      // Init LED Strip
-  pixels.show();                       // Start them with all LEDs off at the beginning
-  pinMode(MICRO, INPUT);               // Microphone
+  Serial.begin(9600);    // Init Serial
+  pixels.begin();        // Init LED Strip
+  pixels.show();         // Start them with all LEDs off at the beginning
+  pinMode(MICRO, INPUT); // Microphone
+
+  /**  TODO:
+  *     - Set brightness via poti
+  */
   pixels.setBrightness(MAXBRIGHTNESS); // Brightness of LEDs
+
+  // Make stepsize and odd number if it es even
+  if (stepsize % 2 == 0)
+  {
+    stepsize += 1;
+  }
 }
 
 /**
@@ -59,7 +74,7 @@ void loop()
     fadeRGBColor = pixels.Color(redNew, greenNew, blueNew); // insert values
     switch (MODE)
     {
-    case 0: // Blink only in redlue
+    case 0: // Blink only in red
       blinkColor(red);
       break;
     case 1: // Blink only in green
@@ -71,7 +86,7 @@ void loop()
     case 4: // Blink only in white
       blinkColor(white);
       break;
-    case 5: // Blink with a fade from RGB
+    case 5: // Blink with a fade in RGB
       blinkColor(fadeRGBColor);
       break;
     case 6: // go from left to right
@@ -80,8 +95,11 @@ void loop()
     case 7: // go from right to left
       pulseRTOL(fadeRGBColor);
       break;
-    case 8: // go from right to left
+    case 8: // go from middle to right and left
       pulseMiddle(fadeRGBColor);
+      break;
+    case 9: // go from outside right and left to middle
+      pulseOutside(fadeRGBColor);
       break;
     default:
       break;
@@ -151,45 +169,57 @@ void pulseMiddle(uint32_t color)
     pixels.setPixelColor(middle - i, color);
     pixels.show();
   }
+  pixels.clear();
+  pixels.show();
+}
+
+/**
+ * Blinks on signal in @param color from outside first (pixel 0) and last pixel (pixel NUMPIXELS) to (pixel NUMPIXELS/2)
+ */
+
+void pulseOutside(uint32_t color)
+{
   for (int i = 0; i < NUMPIXELS / 2 + 1; i++)
   {
-    pixels.setPixelColor(i, off);
+    pixels.setPixelColor(i, color);
     pixels.show();
-    pixels.setPixelColor(NUMPIXELS - i, off);
+    pixels.setPixelColor(NUMPIXELS - i, color);
     pixels.show();
   }
+  pixels.clear();
+  pixels.show();
 }
 /**
  * Fades on each iteration from Red->Green->Blue with @param stepsize
- * @param stepsize must be 
+ * @param stepsize determines how fast you fade into the new color
  */
 void fadeRGB(int stepsize)
 {
 
-  if (fadeStatus == 0)
+  if (fadeStatus == 0) // Fade from Red to Green
   {
     greenNew += stepsize;
     redNew -= stepsize;
-    if (redNew < 0)
+    if (redNew <= 0)
     {
       fadeStatus = 1;
     }
   }
-  else if (fadeStatus == 1)
+  else if (fadeStatus == 1) // Fade from Green to Blue
   {
     blueNew += stepsize;
     greenNew -= stepsize;
-    if (greenNew < 0)
+    if (greenNew <= 0)
     {
       fadeStatus = 2;
     }
   }
-  else
+  else // Fade from Green to Blue
   {
     redNew += stepsize;
     blueNew -= stepsize;
 
-    if (blueNew < 0)
+    if (blueNew <= 0)
     {
       fadeStatus = 0;
     }
