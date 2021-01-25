@@ -1,34 +1,21 @@
 #include <Adafruit_NeoPixel.h>
-#include <avr/power.h>
 
 #define LED_DATA 5       // Pin on which to control LED strip
+#define MICRO 3          // Pin to get signal from microphone
 #define NUMPIXELS 60     // Number of Pixels on the LED strip
 #define MAXBRIGHTNESS 10 // Change this value to determine brightness of LED strip
-#define RGB_SPACE 255    // Maximum value of RGB address space
-#define MICRO 3          // Pin to get signal from microphone
 
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_DATA, NEO_GRB + NEO_KHZ800);
+const int MIDDLE = NUMPIXELS / 2; // Identify middle pixel
+const int DELAY = 1;              // Determines how long a delay between a switch should be
+
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_DATA, NEO_GRB + NEO_KHZ800); // Init LED strip
 
 // Some predefined colors:
-uint32_t magenta = pixels.Color(255, 0, 255);
 uint32_t white = pixels.Color(255, 255, 255);
 uint32_t red = pixels.Color(255, 0, 0);
 uint32_t green = pixels.Color(0, 255, 0);
 uint32_t blue = pixels.Color(0, 0, 255);
 uint32_t off = pixels.Color(0, 0, 0);
-uint32_t greenishwhite = pixels.Color(255, 0, 255);
-
-int soundSignal = LOW; // variable to save microphone signal
-
-// Aux variables for displaying different modes
-int middle = NUMPIXELS / 2; // Identify middle pixel
-int delayval = 1;           // Determines how long a delay between a switch should be
-
-/**  TODO:
- *    - Mode ist static right now
- *    - Determine way to switch modes (e.g. Button, Remote Control)
- */
-int MODE = 9; // Switches between different modes
 
 // Fade variables
 uint32_t fadeRGBColor = pixels.Color(0, 0, 0); // initiliaze fader color
@@ -37,6 +24,13 @@ uint8_t greenNew = 0;                          // initialize 0 to fade into
 uint8_t blueNew = 0;                           // initialize 0 to fade into
 int fadeStatus = 0;                            // switches the RGB fade
 int stepsize = 5;                              // defines velocity of fade, must be odd number!
+
+int soundSignal = LOW; // variable to save microphone signal
+/**  TODO:
+ *    - modeValue ist static right now
+ *    - Determine way to switch modes (e.g. Button, Remote Control)
+ */
+int modeValue = 9; // Switches between different modes
 
 /**
   Code for initialisation
@@ -55,9 +49,7 @@ void setup()
 
   // Make stepsize and odd number if it es even
   if (stepsize % 2 == 0)
-  {
     stepsize += 1;
-  }
 }
 
 /**
@@ -68,11 +60,9 @@ void loop()
 
   soundSignal = digitalRead(MICRO); //read the value of the digital interface 3 assigned to val
   if (soundSignal == HIGH)          // if microphone detects a sound execute LED control
-  {
-
-    fadeRGB(stepsize);                                      // calculate new fading colours
-    fadeRGBColor = pixels.Color(redNew, greenNew, blueNew); // insert values
-    switch (MODE)
+  { 
+    fadeRGBColor = fadeRGB(stepsize); // calculate new fading colours
+    switch (modeValue)
     {
     case 0: // Blink only in red
       blinkColor(red);
@@ -99,7 +89,7 @@ void loop()
       pulseMiddle(fadeRGBColor);
       break;
     case 9: // go from outside right and left to middle
-      pulseOutside(fadeRGBColor);
+      pulseOutside(white);
       break;
     default:
       break;
@@ -164,9 +154,8 @@ void pulseMiddle(uint32_t color)
 {
   for (int i = 0; i < NUMPIXELS / 2 + 1; i++)
   {
-    pixels.setPixelColor(middle + i, color);
-    pixels.show();
-    pixels.setPixelColor(middle - i, color);
+    pixels.setPixelColor(MIDDLE + i, color);
+    pixels.setPixelColor(MIDDLE - i, color);
     pixels.show();
   }
   pixels.clear();
@@ -190,38 +179,31 @@ void pulseOutside(uint32_t color)
   pixels.show();
 }
 /**
- * Fades on each iteration from Red->Green->Blue with @param stepsize
+ * Fades on each iteration from Red->Green->Blue with 
  * @param stepsize determines how fast you fade into the new color
  */
-void fadeRGB(int stepsize)
+uint32_t fadeRGB(int stepsize)
 {
-
   if (fadeStatus == 0) // Fade from Red to Green
   {
-    greenNew += stepsize;
     redNew -= stepsize;
+    greenNew += stepsize;
     if (redNew <= 0)
-    {
       fadeStatus = 1;
-    }
   }
   else if (fadeStatus == 1) // Fade from Green to Blue
   {
-    blueNew += stepsize;
     greenNew -= stepsize;
+    blueNew += stepsize;
     if (greenNew <= 0)
-    {
       fadeStatus = 2;
-    }
   }
-  else // Fade from Green to Blue
+  else // Fade from Blue to Red
   {
-    redNew += stepsize;
     blueNew -= stepsize;
-
+    redNew += stepsize;
     if (blueNew <= 0)
-    {
       fadeStatus = 0;
-    }
   }
+  return pixels.Color(redNew, greenNew, blueNew);
 }
