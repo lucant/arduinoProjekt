@@ -60,7 +60,7 @@ void loop()
 
   soundSignal = digitalRead(MICRO); //read the value of the digital interface 3 assigned to val
   if (soundSignal == HIGH)          // if microphone detects a sound execute LED control
-  { 
+  {
     fadeRGBColor = fadeRGB(stepsize); // calculate new fading colours
     switch (modeValue)
     {
@@ -97,7 +97,8 @@ void loop()
   }
 }
 /**
- * Blinks on signal in @param color
+ * Blinks on signal 
+ * @param color Color of blinking
  */
 void blinkColor(uint32_t color)
 {
@@ -108,7 +109,8 @@ void blinkColor(uint32_t color)
 }
 
 /**
- * Blinks on signal @param color from first (pixel 0) to last (pixel NUMPIXELS)
+ * Blinks on signal from first (pixel 0) to last (pixel NUMPIXELS)
+ * @param color Color of blinking
  */
 
 void pulseLTOR(uint32_t color)
@@ -128,7 +130,8 @@ void pulseLTOR(uint32_t color)
 }
 
 /**
- * Blinks on signal @param color from last (pixel NUMPIXELS) to first (pixel 0) 
+ * Blinks on signal from last (pixel NUMPIXELS) to first (pixel 0) 
+ * @param color Color of blinking
  */
 
 void pulseRTOL(uint32_t color)
@@ -147,7 +150,8 @@ void pulseRTOL(uint32_t color)
 }
 
 /**
- * Blinks on signal in @param color from middle (pixel NUMPIXELS/2) to first (pixel 0) and last pixel (pixel NUMPIXELS)
+ * Blinks on signal from middle (pixel NUMPIXELS/2) to first (pixel 0) and last pixel (pixel NUMPIXELS)
+ * @param color Color of blinking
  */
 
 void pulseMiddle(uint32_t color)
@@ -163,7 +167,8 @@ void pulseMiddle(uint32_t color)
 }
 
 /**
- * Blinks on signal in @param color from outside first (pixel 0) and last pixel (pixel NUMPIXELS) to (pixel NUMPIXELS/2)
+ * Blinks on signal from outside first (pixel 0) and last pixel (pixel NUMPIXELS) to (pixel NUMPIXELS/2)
+ *  @param color Color of blinking
  */
 
 void pulseOutside(uint32_t color)
@@ -181,6 +186,7 @@ void pulseOutside(uint32_t color)
 /**
  * Fades on each iteration from Red->Green->Blue with 
  * @param stepsize determines how fast you fade into the new color
+ * @return pixels.Color(R, G, B) with new faded R G B values
  */
 uint32_t fadeRGB(int stepsize)
 {
