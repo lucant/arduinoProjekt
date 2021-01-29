@@ -1,6 +1,6 @@
 #include "pixels.h"
-#include "fadeRGB.h"
-#include "button.h"
+#include "colorPallete.h"
+#include "buttonSettings.h"
 #include "reactiveModes/blinkColor.h"
 #include "reactiveModes/pulseLTOR.h"
 #include "reactiveModes/pulseRTOL.h"
@@ -25,10 +25,9 @@ void setup()
   pinMode(BUTTONUP, INPUT_PULLUP);   // ButtonUP Switch
   pinMode(BUTTONDOWN, INPUT_PULLUP); // ButtonDown Switch
   pixels.setBrightness(brightness);  // Brightness of LEDs
-
   // Make stepsize and odd number if it es even
-  if (stepsize % 2 == 0)
-    stepsize += 1;
+  // if (stepsize % 2 == 0)
+  //   stepsize += 1;
 }
 
 /**
@@ -42,38 +41,25 @@ void loop()
   soundSignal = digitalRead(MICRO); //read the value of the digital interface 3 assigned to val
   if (soundSignal == HIGH)          // if microphone detects a sound execute LED control
   {
-    fadeRGBColor = fadeRGB(); // calculate new fading colours
     switch (LEDModeValue)
     {
-    case 0: // Blink only in red
-      blinkColor(red);
+    case 0: // Blink in current color mode
+      blinkColor(colorPalletteRGB);
       break;
-    case 1: // Blink only in green
-      blinkColor(green);
+    case 1: // go from left to right
+      pulseLTOR();
       break;
-    case 2: // Blink only in blue
-      blinkColor(blue);
+    case 2: // go from right to left
+      pulseRTOL();
       break;
-    case 3: // Blink only in white
-      blinkColor(white);
+    case 3: // go from middle to right and left
+      pulseMiddle();
       break;
-    case 4: // Blink with a fade in RGB
-      blinkColor(fadeRGBColor);
+    case 4: // go from outside right and left to middle
+      pulseOutside();
       break;
-    case 5: // go from left to right
-      pulseLTOR(fadeRGBColor);
-      break;
-    case 6: // go from right to left
-      pulseRTOL(fadeRGBColor);
-      break;
-    case 7: // go from middle to right and left
-      pulseMiddle(fadeRGBColor);
-      break;
-    case 8: // go from outside right and left to middle
-      pulseOutside(fadeRGBColor);
-      break;
-    case 9: // switch beween even and odd pixels
-      alterNate(fadeRGBColor);
+    case 5: // switch beween even and odd pixels
+      alterNate();
       break;
     default:
       break;

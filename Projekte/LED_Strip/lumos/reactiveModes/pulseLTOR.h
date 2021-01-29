@@ -1,17 +1,19 @@
 #ifndef _PULSELTOR_H
 #define _PULSELTOR_H
 #include "../pixels.h"
+
 /**
  * Blinks on signal from first (pixel 0) to last (pixel NUMPIXELS)
  * @param color Color of blinking
  */
 
-void pulseLTOR(uint32_t color)
+void pulseLTOR()
 {
 
-    for (int i = 0; i < NUMPIXELS; i++)
+    for (int i = 0; i < NUMPIXELS + 1; i++)
     {
-        pixels.setPixelColor(i, color);
+        colorPallette();
+        pixels.setPixelColor(i, colorPalletteRGB);
         pixels.show();
     }
 

@@ -7,12 +7,14 @@
  * @param color Color of blinking
  */
 
-void pulseMiddle(uint32_t color)
+void pulseMiddle()
 {
     for (int i = 0; i < NUMPIXELS / 2 + 1; i++)
     {
-        pixels.setPixelColor(MIDDLE + i, color);
-        pixels.setPixelColor(MIDDLE - i, color);
+        colorPallette();
+        pixels.setPixelColor(MIDDLE + i, colorPalletteRGB);
+        colorPallette();
+        pixels.setPixelColor(MIDDLE - i, colorPalletteRGB);
         pixels.show();
     }
     pixels.clear();

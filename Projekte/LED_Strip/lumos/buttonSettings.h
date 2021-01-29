@@ -1,5 +1,5 @@
-#ifndef _BUTTON_H
-#define _BUTTON_H
+#ifndef _BUTTONSETTINGS_H
+#define _BUTTONSETTINGS_H
 #include "pixels.h"
 
 #define BUTTONMODE 8 // Pin that receives signal from MODE button
@@ -9,7 +9,7 @@
 #define DOWN 0
 #define BRIGHTNESSSETTING 0
 #define MODESETTING 1
-#define SPEEDSETTING 2
+#define COLORSETTING 2
 
 /**
  * TODO: Comments on whole header as soon as implementation is done completly
@@ -17,28 +17,29 @@
 
 void brightnessSettingLED()
 {
-    for (int i = 0; i < 80; i++)
+    uint8_t fadeWhite = 128;
+
+    for (int i = 0; i < fadeWhite; i++)
     {
-        pixels.fill(grey);
-        pixels.setBrightness(i);
+        pixels.fill(pixels.Color(i, i, i));
         pixels.show();
     }
     for (int i = 0; i < 80; i++)
     {
-        pixels.fill(grey);
-        pixels.setBrightness(80 - i);
+        pixels.fill(pixels.Color(fadeWhite - i, fadeWhite - i, fadeWhite - i));
         pixels.show();
     }
     pixels.clear();
     pixels.show();
-    pixels.setBrightness(brightness);
 }
 
 void modeSettingLED()
 {
+
     for (int i = 0; i < NUMPIXELS; i++)
     {
-        pixels.setPixelColor(i, white);
+        colorPallette();
+        pixels.setPixelColor(i, colorPalletteRGB);
         pixels.show();
         delay(10);
     }
@@ -50,13 +51,14 @@ void modeSettingLED()
     }
 }
 
-void speedSettingLED()
+void colorSettingLED()
 {
     for (int j = 0; j < 3; j++)
     {
         for (int i = 0; i < NUMPIXELS; i++)
         {
-            pixels.setPixelColor(i, white);
+            colorPallette();
+            pixels.setPixelColor(i, colorPalletteRGB);
             pixels.show();
         }
         for (int i = 0; i < NUMPIXELS; i++)
@@ -71,14 +73,24 @@ void showStatusLED()
 {
     pixels.clear();
     pixels.show();
-    int modeSection[] = {0, MODE_NO + 1};
-    int hueSection[] = {modeSection[1] + 2, (MAXBRIGHTNESS / STEPBRIGHTNESS)};
+    int modeSection[] = {0, MODE_NO};
+    int colorSection[] = {MODE_NO + 3, 43};
+    int hueSection[] = {NUMPIXELS - (MAXBRIGHTNESS / STEPBRIGHTNESS) - 1, (MAXBRIGHTNESS / STEPBRIGHTNESS)};
+
     // Show current Mode
     pixels.fill(grey, modeSection[0], modeSection[1]);
-    pixels.fill(yellow, modeSection[0], LEDModeValue + 1);
+    pixels.fill(red, modeSection[0], LEDModeValue + 1);
+
+    // Show current color pallete
+    for (int i = colorSection[0]; i < colorSection[0] + colorSection[1]; i++)
+    {
+        colorPallette();
+        pixels.setPixelColor(i, colorPalletteRGB);
+    }
     // Show current brightness
+
     pixels.fill(grey, hueSection[0], hueSection[1]);
-    pixels.fill(cyan, hueSection[0], (brightness / STEPBRIGHTNESS));
+    pixels.fill(blue, hueSection[0], (brightness / STEPBRIGHTNESS));
     pixels.show();
 }
 
@@ -88,8 +100,8 @@ void handleButtonMode()
     /**
      * TODO: Currently only 2 modes are implemented, therefore settingsModevalue is hardcoded
      */
-    // settingModeValue = settingModeValue % SETTINGS_NO;
-    settingModeValue = settingModeValue % 2;
+    settingModeValue = settingModeValue % SETTINGS_NO;
+    // settingModeValue = settingModeValue % 2;
 
     switch (settingModeValue)
     {
@@ -100,7 +112,7 @@ void handleButtonMode()
         modeSettingLED();
         break;
     case 2:
-        speedSettingLED();
+        colorSettingLED();
         break;
     default:
         break;
@@ -109,6 +121,7 @@ void handleButtonMode()
 
 void handleButton(int button)
 {
+
     showStatusLED();
     delay(200);
     switch (button)
@@ -122,14 +135,14 @@ void handleButton(int button)
                 brightness += STEPBRIGHTNESS;
                 pixels.setBrightness(brightness);
             }
+            Serial.println(pixels.getBrightness());
             break;
-        case SPEEDSETTING:
-            /**
-             *   TODO: increase speed
-             */
+        case COLORSETTING:
+            currentColor = (currentColor + 1) % (NUMCOLORS);
             break;
         case MODESETTING:
-            LEDModeValue = (LEDModeValue + 1) % (MODE_NO + 1);
+            LEDModeValue = (LEDModeValue + 1) % (MODE_NO);
+            Serial.println(LEDModeValue);
             break;
         default:
             break;
@@ -144,17 +157,21 @@ void handleButton(int button)
                 brightness -= STEPBRIGHTNESS;
                 pixels.setBrightness(brightness);
             }
+            Serial.println(pixels.getBrightness());
             break;
-        case SPEEDSETTING:
-            /**
-             *   TODO: decrease speed
-             */
+        case COLORSETTING:
+            if (currentColor > 0)
+                currentColor -= 1;
+            else
+                currentColor = 8;
+            colorPalletteRGB = NUMCOLORS;
             break;
         case MODESETTING:
             if (LEDModeValue > 0)
                 LEDModeValue -= 1;
             else
-                LEDModeValue = MODE_NO;
+                LEDModeValue = MODE_NO - 1;
+            Serial.println(LEDModeValue);
             break;
         default:
             break;
@@ -164,7 +181,7 @@ void handleButton(int button)
         break;
     }
     showStatusLED();
-    delay(400);
+    delay(500);
     pixels.clear();
     pixels.show();
 }

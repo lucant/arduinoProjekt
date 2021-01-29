@@ -8,7 +8,8 @@
  */
 void blinkColor(uint32_t color)
 {
-    pixels.fill(color, 0, NUMPIXELS);
+    colorPallette();
+    pixels.fill(colorPalletteRGB, 0, NUMPIXELS);
     pixels.show();
     pixels.clear();
     pixels.show();
