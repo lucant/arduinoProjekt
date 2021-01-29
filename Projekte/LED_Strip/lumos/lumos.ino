@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "pixels.h"
 #include "fadeRGB.h"
 #include "button.h"
@@ -12,10 +11,6 @@
 #define MICRO 3 // Pin to get signal from microphone
 
 int soundSignal = LOW; // variable to save microphone signal
-/**  TODO:
- *    - LEDModeValue ist static right now
- *    - Determine way to switch modes (e.g. Button, Remote Control)
- */
 
 /**
   Code for initialisation
