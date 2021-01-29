@@ -12,7 +12,7 @@ void pulseLTOR()
 
     for (int i = 0; i < NUMPIXELS + 1; i++)
     {
-        colorPallette();
+        fadeRGB(stepsize);
         pixels.setPixelColor(i, colorPalletteRGB);
         pixels.show();
     }

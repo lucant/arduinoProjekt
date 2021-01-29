@@ -8,7 +8,7 @@
  */
 void blinkColor(uint32_t color)
 {
-    colorPallette();
+    fadeRGB(stepsize);
     pixels.fill(colorPalletteRGB, 0, NUMPIXELS);
     pixels.show();
     pixels.clear();

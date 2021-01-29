@@ -18,11 +18,14 @@ uint8_t currentColor = 0;
  * @param stepsize determines how fast you fade into the new color
  * @return pixels.Color(R, G, B) with new faded R G B values
  */
-void colorPallette()
+void fadeRGB(uint8_t stepsize)
 {
-  switch (currentColor)
+  if (currentColor == 0) // Fade only when currentColor is on Fade
   {
-  case 0:
+    // Make stepsize and odd number if it es even
+    if (stepsize % 2 == 0)
+      stepsize += 1;
+      
     if (fadeStatus == 0) // Fade from Red to Green
     {
       redNew = constrain(redNew - stepsize, 0, 255);
@@ -45,30 +48,7 @@ void colorPallette()
         fadeStatus = 0;
     }
     colorPalletteRGB = pixels.Color(redNew, greenNew, blueNew);
-    break;
-  case 1:
-    colorPalletteRGB = red;
-    break;
-  case 2:
-    colorPalletteRGB = green;
-    break;
-  case 3:
-    colorPalletteRGB = blue;
-    break;
-  case 4:
-    colorPalletteRGB = white;
-    break;
-  case 5:
-    colorPalletteRGB = magenta;
-    break;
-  case 6:
-    colorPalletteRGB = cyan;
-    break;
-  case 7:
-    colorPalletteRGB = yellow;
-    break;
-  default:
-    break;
   }
 }
+
 #endif

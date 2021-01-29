@@ -12,9 +12,9 @@ void pulseOutside()
 
     for (int i = 0; i < NUMPIXELS / 2 + 1; i++)
     {
-        colorPallette();
+        fadeRGB(stepsize);
         pixels.setPixelColor(i, colorPalletteRGB);
-        colorPallette();
+        fadeRGB(stepsize);
         pixels.setPixelColor(NUMPIXELS - i, colorPalletteRGB);
         pixels.show();
     }

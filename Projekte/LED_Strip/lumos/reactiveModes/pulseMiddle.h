@@ -11,9 +11,9 @@ void pulseMiddle()
 {
     for (int i = 0; i < NUMPIXELS / 2 + 1; i++)
     {
-        colorPallette();
+        fadeRGB(stepsize);
         pixels.setPixelColor(MIDDLE + i, colorPalletteRGB);
-        colorPallette();
+        fadeRGB(stepsize);
         pixels.setPixelColor(MIDDLE - i, colorPalletteRGB);
         pixels.show();
     }

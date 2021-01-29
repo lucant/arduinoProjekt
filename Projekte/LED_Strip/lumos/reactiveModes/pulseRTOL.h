@@ -11,7 +11,7 @@ void pulseRTOL()
 {
     for (int i = 0; i < NUMPIXELS + 1; i++)
     {
-        colorPallette();
+        fadeRGB(stepsize);
         pixels.setPixelColor(NUMPIXELS - i, colorPalletteRGB);
         pixels.show();
     }

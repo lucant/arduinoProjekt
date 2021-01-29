@@ -7,7 +7,7 @@ void alterNate()
     set = set % 2;
     for (int i = 0; i < NUMPIXELS - 1; i++)
     {
-        colorPallette();
+        fadeRGB(stepsize);
         if (set == 1)
         {
             pixels.setPixelColor(i + i % 2, colorPalletteRGB);

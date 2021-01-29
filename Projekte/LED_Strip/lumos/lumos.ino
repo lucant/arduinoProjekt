@@ -25,9 +25,6 @@ void setup()
   pinMode(BUTTONUP, INPUT_PULLUP);   // ButtonUP Switch
   pinMode(BUTTONDOWN, INPUT_PULLUP); // ButtonDown Switch
   pixels.setBrightness(brightness);  // Brightness of LEDs
-  // Make stepsize and odd number if it es even
-  // if (stepsize % 2 == 0)
-  //   stepsize += 1;
 }
 
 /**

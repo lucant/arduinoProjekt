@@ -11,6 +11,7 @@
 #define MODESETTING 1
 #define COLORSETTING 2
 
+uint32_t colors[] = {colorPalletteRGB, red, green, blue, white, magenta, cyan, yellow};
 /**
  * TODO: Comments on whole header as soon as implementation is done completly
  */
@@ -38,7 +39,7 @@ void modeSettingLED()
 
     for (int i = 0; i < NUMPIXELS; i++)
     {
-        colorPallette();
+        fadeRGB(stepsize);
         pixels.setPixelColor(i, colorPalletteRGB);
         pixels.show();
         delay(10);
@@ -57,7 +58,7 @@ void colorSettingLED()
     {
         for (int i = 0; i < NUMPIXELS; i++)
         {
-            colorPallette();
+            fadeRGB(stepsize + 16);
             pixels.setPixelColor(i, colorPalletteRGB);
             pixels.show();
         }
@@ -84,7 +85,7 @@ void showStatusLED()
     // Show current color pallete
     for (int i = colorSection[0]; i < colorSection[0] + colorSection[1]; i++)
     {
-        colorPallette();
+        fadeRGB(stepsize + 32);
         pixels.setPixelColor(i, colorPalletteRGB);
     }
     // Show current brightness
@@ -135,14 +136,13 @@ void handleButton(int button)
                 brightness += STEPBRIGHTNESS;
                 pixels.setBrightness(brightness);
             }
-            Serial.println(pixels.getBrightness());
             break;
         case COLORSETTING:
             currentColor = (currentColor + 1) % (NUMCOLORS);
+            colorPalletteRGB = colors[currentColor];
             break;
         case MODESETTING:
             LEDModeValue = (LEDModeValue + 1) % (MODE_NO);
-            Serial.println(LEDModeValue);
             break;
         default:
             break;
@@ -157,21 +157,19 @@ void handleButton(int button)
                 brightness -= STEPBRIGHTNESS;
                 pixels.setBrightness(brightness);
             }
-            Serial.println(pixels.getBrightness());
             break;
         case COLORSETTING:
             if (currentColor > 0)
                 currentColor -= 1;
             else
-                currentColor = 8;
-            colorPalletteRGB = NUMCOLORS;
+                currentColor = NUMCOLORS;
+            colorPalletteRGB = colors[currentColor];
             break;
         case MODESETTING:
             if (LEDModeValue > 0)
                 LEDModeValue -= 1;
             else
                 LEDModeValue = MODE_NO - 1;
-            Serial.println(LEDModeValue);
             break;
         default:
             break;
