@@ -14,7 +14,7 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_DATA, NEO_GRB + NEO_
 const int MIDDLE = NUMPIXELS / 2; // Identify middle pixel
 const int DELAY = 1;              // Determines how long a delay between a switch should be
 
-// Some predefined colors:
+// Some p redefined colors:
 uint32_t colorPalletteRGB = pixels.Color(0,0,0); // Stores the current color pallette for all the modes
 uint32_t white = pixels.Color(255, 255, 255);
 uint32_t grey = pixels.Color(127, 127, 127);

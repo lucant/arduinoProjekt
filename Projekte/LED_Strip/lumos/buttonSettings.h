@@ -25,6 +25,7 @@ void brightnessSettingLED()
         pixels.fill(pixels.Color(i, i, i));
         pixels.show();
     }
+    delay(100);
     for (int i = 0; i < 80; i++)
     {
         pixels.fill(pixels.Color(fadeWhite - i, fadeWhite - i, fadeWhite - i));
@@ -40,15 +41,28 @@ void modeSettingLED()
     for (int i = 0; i < NUMPIXELS; i++)
     {
         fadeRGB(stepsize);
-        pixels.setPixelColor(i, colorPalletteRGB);
+        pixels.setPixelColor(i, white);
         pixels.show();
-        delay(10);
+        delay(5);
     }
     for (int i = 0; i < NUMPIXELS; i++)
     {
         pixels.setPixelColor(i, off);
         pixels.show();
-        delay(10);
+        delay(5);
+    }
+
+    for (int i = NUMPIXELS; i > 0; i--)
+    {
+        pixels.setPixelColor(i, white);
+        pixels.show();
+        delay(5);
+    }
+    for (int i = NUMPIXELS; i > 0; i--)
+    {
+        pixels.setPixelColor(i, off);
+        pixels.show();
+        delay(5);
     }
 }
 
@@ -56,17 +70,16 @@ void colorSettingLED()
 {
     for (int j = 0; j < 3; j++)
     {
-        for (int i = 0; i < NUMPIXELS; i++)
+
+        for (int i = 0; i < NUMPIXELS / 2 + 1; i++)
         {
-            fadeRGB(stepsize + 16);
-            pixels.setPixelColor(i, colorPalletteRGB);
+            pixels.setPixelColor(MIDDLE + i, white);
+            pixels.setPixelColor(MIDDLE - i, white);
             pixels.show();
+            delay(10);
         }
-        for (int i = 0; i < NUMPIXELS; i++)
-        {
-            pixels.setPixelColor(i, off);
-            pixels.show();
-        }
+        pixels.clear();
+        pixels.show();
     }
 }
 
