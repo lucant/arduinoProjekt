@@ -63,6 +63,7 @@ void loop()
     }
   }
 }
+
 /**
  * checkButtonPress() checks for incoming button presses and 
  * handels them by calling their respective handlers 
