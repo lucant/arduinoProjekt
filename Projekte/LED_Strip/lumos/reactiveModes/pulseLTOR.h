@@ -7,20 +7,22 @@
  * @param color Color of blinking
  */
 
-void pulseLTOR()
+void pulseLTOR(uint16_t grooveSignal, int activePixels)
 {
+    // if (grooveSignal > 250)
+    // {
 
-    for (int i = 0; i < NUMPIXELS + 1; i++)
-    {
-        fadeRGB(stepsize);
-        pixels.setPixelColor(i, colorPalletteRGB);
-        pixels.show();
-    }
+        double activePixelRatio = ((double)grooveSignal / 1024.0) * NUMPIXELS;
+        for (int i = 0; i < activePixelRatio + 1; i++)
+        {
+            fadeRGB(1);
+            //pixels.setPixelColor(i, pixels.Color(grooveSignal, 0, 0));
+            pixels.setPixelColor(i, colorPalletteRGB);
+            pixels.show();
+        }
 
-    for (int i = 0; i < NUMPIXELS; i++)
-    {
-        pixels.setPixelColor(NUMPIXELS - i, off);
+        pixels.clear();
         pixels.show();
-    }
+    // }
 }
 #endif
