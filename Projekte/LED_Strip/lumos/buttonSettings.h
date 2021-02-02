@@ -11,7 +11,7 @@
 #define MODESETTING 1
 #define COLORSETTING 2
 
-uint32_t colors[] = {colorPalletteRGB, red, green, blue, white, magenta, cyan, yellow};
+uint32_t colors[] = {colorPalletteRGB, colorPalletteRGB, red, green, blue, white, magenta, cyan, yellow};
 /**
  * TODO: Comments on whole header as soon as implementation is done completly
  */
@@ -88,18 +88,38 @@ void showStatusLED()
     pixels.clear();
     pixels.show();
     int modeSection[] = {0, MODE_NO};
-    int colorSection[] = {MODE_NO + 3, 43};
-    int hueSection[] = {NUMPIXELS - (MAXBRIGHTNESS / STEPBRIGHTNESS) - 1, (MAXBRIGHTNESS / STEPBRIGHTNESS)};
+    int colorSection[] = {MODE_NO + 3, 41};
+    int hueSection[] = {NUMPIXELS - (MAXBRIGHTNESS / STEPBRIGHTNESS) - 3, (MAXBRIGHTNESS / STEPBRIGHTNESS)};
 
     // Show current Mode
     pixels.fill(grey, modeSection[0], modeSection[1]);
     pixels.fill(red, modeSection[0], LEDModeValue + 1);
 
     // Show current color pallete
+
+    uint8_t redColor = 255;
+    uint8_t greenColor = 255;
+    uint8_t blueColor = 255;
+    uint32_t displayColor = pixels.Color(redColor, greenColor, blueColor);
     for (int i = colorSection[0]; i < colorSection[0] + colorSection[1]; i++)
     {
-        fadeRGB(stepsize + 32);
-        pixels.setPixelColor(i, colorPalletteRGB);
+        if (currentColor == 0)
+        {
+            greenColor = constrain(greenColor - 8, 0, 255);
+            blueColor = constrain(blueColor - 16, 0, 255);
+            displayColor = pixels.Color(redColor, greenColor, blueColor);
+        }
+        else if (currentColor == 1)
+        {
+            fadeRGB(1);
+            displayColor = colorPalletteRGB;
+        }
+        else
+        {
+            displayColor = colorPalletteRGB;
+        }
+
+        pixels.setPixelColor(i, displayColor);
     }
     // Show current brightness
 

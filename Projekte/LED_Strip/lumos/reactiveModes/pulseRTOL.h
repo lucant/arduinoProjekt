@@ -7,21 +7,14 @@
  * @param color Color of blinking
  */
 
-void pulseRTOL()
+void pulseRTOL(uint8_t activePixels)
 {
-    for (int i = 0; i < NUMPIXELS + 1; i++)
+    for (int i = 0; i < activePixels; i++)
     {
-        fadeRGB(stepsize);
         pixels.setPixelColor(NUMPIXELS - i, colorPalletteRGB);
         pixels.show();
     }
-
     pixels.clear();
     pixels.show();
-    // for (int i = 0; i < NUMPIXELS; i++)
-    // {
-    //     pixels.setPixelColor(i, off);
-    //     pixels.show();
-    // }
 }
 #endif

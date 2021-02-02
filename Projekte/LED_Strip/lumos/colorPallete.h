@@ -2,7 +2,7 @@
 #define _FADERGB_H
 #include "pixels.h"
 
-#define NUMCOLORS 8
+#define NUMCOLORS 9
 
 // Fade variables
 uint8_t redNew = 255;   // start from red
@@ -20,12 +20,12 @@ uint8_t currentColor = 0;
  */
 void fadeRGB(uint8_t stepsize)
 {
-  if (currentColor == 0) // Fade only when currentColor is on Fade
+  if (currentColor == 1) // Fade only when currentColor is on Fade
   {
     // Make stepsize and odd number if it es even
     if (stepsize % 2 == 0)
       stepsize += 1;
-      
+
     if (fadeStatus == 0) // Fade from Red to Green
     {
       redNew = constrain(redNew - stepsize, 0, 255);
@@ -46,6 +46,30 @@ void fadeRGB(uint8_t stepsize)
       redNew = constrain(redNew + stepsize, 0, 255);
       if (blueNew == 0)
         fadeStatus = 0;
+    }
+    colorPalletteRGB = pixels.Color(redNew, greenNew, blueNew);
+  }
+}
+
+void soundTemperature(uint8_t signalRGB)
+{
+  if (currentColor == 0) // Fade only when currentColor is on Fade
+  {
+    redNew = 255;
+    if (signalRGB <= 80)
+    {
+      blueNew = constrain(blueNew + 10, 0, 255);
+      greenNew = constrain(greenNew + 10, 0, 255);
+    }
+    if (signalRGB > 80 && signalRGB <= 200)
+    {
+      blueNew = constrain(blueNew - 75, 0, 255);
+      greenNew = constrain(greenNew - 10, 0, 255);
+    }
+    if (signalRGB > 200)
+    {
+      blueNew = constrain(blueNew - 150, 0, 255);
+      greenNew = constrain(greenNew - 150, 0, 255);
     }
     colorPalletteRGB = pixels.Color(redNew, greenNew, blueNew);
   }

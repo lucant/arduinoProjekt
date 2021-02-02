@@ -7,22 +7,12 @@
  * @param color Color of blinking
  */
 
-void pulseMiddle(uint16_t grooveSignal, int activePixels)
+void pulseMiddle(uint8_t activePixels)
 {
-    // if (grooveSignal > 500)
-    // {
-        for (int i = 0; i < activePixels + 1; i++)
-        {
-            fadeRGB(1);
-            pixels.setPixelColor(MIDDLE + i, colorPalletteRGB);
-            pixels.setPixelColor(MIDDLE + i + activePixels, off);
-            // fadeRGB(stepsize);
-            pixels.setPixelColor(MIDDLE - i, colorPalletteRGB);
-            pixels.setPixelColor(MIDDLE - i - activePixels, off);
-            pixels.show();
-        }
-        pixels.clear();
-        pixels.show();
-    // }
+    int start = (MIDDLE - activePixels / 2);
+    pixels.fill(colorPalletteRGB, start, activePixels);
+    pixels.show();
+    pixels.clear();
+    pixels.show();
 }
 #endif

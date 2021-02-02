@@ -8,15 +8,13 @@
 #include "reactiveModes/pulseMiddle.h"
 #include "reactiveModes/pulseOutside.h"
 #include "reactiveModes/alternate.h"
-#include <microsmooth.h>
+#include "reactiveModes/singlePixel.h"
 
 // uint16_t grooveSignal = 0; // variable to save microphone signal
 
 /**
   Code for initialisation
 */
-
-
 
 void setup()
 {
@@ -33,61 +31,58 @@ void setup()
 /**
   Main code that is executed in a infinite loop
 */
-
+uint8_t minSession = 255;
+uint8_t maxSession = 0;
 void loop()
 {
   checkButtonPress();
-
   float grooveSignal = 0.; // variable to save microphone signal
-  //Get sample of 32 loops and afterwards scale it (>>= 5) to 1024 bits
-  // for (int i = 0; i < 64; i++)
-  // {
-  //   grooveSignal += analogRead(A0);
-  // }
-  // grooveSignal >>= 5;
-  //grooveSignal = sampling(); //read the value of the digital interface 3 assigned to val
   grooveSignal = sampling();
 
-  int activePixelRatio = ((double)grooveSignal / 1024.0) * NUMPIXELS;
+  if (grooveSignal < minSession)
+    minSession = grooveSignal;
 
-  Serial.print("Groovesignal: ");
-  Serial.println(grooveSignal);
-  Serial.print("PixelRatio: ");
-  Serial.println(activePixelRatio);
+  if (grooveSignal > maxSession)
+    maxSession = grooveSignal;
 
-  //pulseLTOR(grooveSignal, activePixelRatio);
-  pulseMiddle(grooveSignal, activePixelRatio);
-  // switch (LEDModeValue)
-  // {
-  // case 0: // Blink in current color mode
-  //   blinkColor(colorPalletteRGB);
-  //   break;
-  // case 1: // go from left to right
-  //   pulseLTOR(grooveSignal, activePixelRatio);
-  //   break;
-  // case 2: // go from right to left
-  //   pulseRTOL();
-  //   break;
-  // case 3: // go from middle to right and left
-  //   pulseMiddle();
-  //   break;
-  // case 4: // go from outside right and left to middle
-  //   pulseOutside();
-  //   break;
-  // case 5: // switch beween even and odd pixels
-  //   alterNate();
-  //   break;
-  // default:
-  //   break;
-  // }
+  fadeRGB(stepsize);
+  soundTemperature(grooveSignal);
+  uint16_t activePixelRatio = map(grooveSignal, minSession, maxSession, 1, NUMPIXELS);
+
+  switch (LEDModeValue)
+  {
+  case 0: // Blink in current color mode
+    blinkColor(grooveSignal, colorPalletteRGB);
+    break;
+  case 1: // go from left to right
+    pulseLTOR(activePixelRatio);
+    break;
+  case 2: // go from right to left
+    pulseRTOL(activePixelRatio);
+    break;
+  case 3: // go from middle to right and left
+    pulseMiddle(activePixelRatio);
+    break;
+  case 4: // go from outside right and left to middle
+    pulseOutside(activePixelRatio);
+    break;
+  case 5: // switch beween even and odd pixels
+    alterNate();
+    break;
+  case 6: // same as middle but only displaying one pixel
+    singlePixel(activePixelRatio);
+  default:
+    break;
+  }
 }
 
 /**
- * checkButtonPress() checks for incoming button presses and 
- * handels them by calling their respective handlers 
+ * checkButtonPress() checks for incoming button presses and
+ * handels them by calling their respective handlers
  */
 void checkButtonPress()
 {
+
   if (digitalRead(BUTTONMODE) == LOW)
   {
     delay(250); // Delay to prevent multiple calls

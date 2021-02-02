@@ -6,7 +6,7 @@
 #define NUMPIXELS 60      // Number of Pixels on the LED strip
 #define MAXBRIGHTNESS 255 // Change this value to determine brightness of LED strip
 #define STEPBRIGHTNESS 51 // Change this value to increase speed of dimming NOTE: (must be a divisor of MAXBRIGHTNESS)
-#define MODE_NO 6         // Defines maximum number of modes
+#define MODE_NO 7         // Defines maximum number of modes
 #define SETTINGS_NO 3     // Defines maximum number of settings
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_DATA, NEO_GRB + NEO_KHZ800); // Init LED strip

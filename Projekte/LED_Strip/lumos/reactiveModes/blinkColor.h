@@ -6,11 +6,13 @@
  * Blinks on signal 
  * @param color Color of blinking
  */
-void blinkColor(uint32_t color)
+void blinkColor(uint8_t grooveSignal, uint32_t color)
 {
-    fadeRGB(stepsize);
-    pixels.fill(colorPalletteRGB, 0, NUMPIXELS);
-    pixels.show();
+    if (grooveSignal > 150)
+    {
+        pixels.fill(color, 0, NUMPIXELS);
+        pixels.show();
+    }
     pixels.clear();
     pixels.show();
 }
