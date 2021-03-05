@@ -2,8 +2,8 @@
 #define _PIXELS_H
 #include <Adafruit_NeoPixel.h>
 
-#define LED_DATA 5        // Pin on which to control LED strip
-#define NUMPIXELS 60      // Number of Pixels on the LED strip
+#define LED_DATA 5              // Pin on which to control LED strip
+#define NUMPIXELS 144      // Number of Pixels on the LED strip
 #define MAXBRIGHTNESS 255 // Change this value to determine brightness of LED strip
 #define STEPBRIGHTNESS 51 // Change this value to increase speed of dimming NOTE: (must be a divisor of MAXBRIGHTNESS)
 #define MODE_NO 7         // Defines maximum number of modes

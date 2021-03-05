@@ -43,26 +43,26 @@ void modeSettingLED()
         fadeRGB(stepsize);
         pixels.setPixelColor(i, white);
         pixels.show();
-        delay(5);
+        //delay(5);
     }
     for (int i = 0; i < NUMPIXELS; i++)
     {
         pixels.setPixelColor(i, off);
         pixels.show();
-        delay(5);
+        //delay(5);
     }
 
     for (int i = NUMPIXELS; i > 0; i--)
     {
         pixels.setPixelColor(i, white);
         pixels.show();
-        delay(5);
+        //delay(5);
     }
     for (int i = NUMPIXELS; i > 0; i--)
     {
         pixels.setPixelColor(i, off);
         pixels.show();
-        delay(5);
+        // delay(5);
     }
 }
 
@@ -76,7 +76,7 @@ void colorSettingLED()
             pixels.setPixelColor(MIDDLE + i, white);
             pixels.setPixelColor(MIDDLE - i, white);
             pixels.show();
-            delay(10);
+            //  delay(10);
         }
         pixels.clear();
         pixels.show();
@@ -88,8 +88,8 @@ void showStatusLED()
     pixels.clear();
     pixels.show();
     int modeSection[] = {0, MODE_NO};
-    int colorSection[] = {MODE_NO + 3, 41};
-    int hueSection[] = {NUMPIXELS - (MAXBRIGHTNESS / STEPBRIGHTNESS) - 3, (MAXBRIGHTNESS / STEPBRIGHTNESS)};
+    int colorSection[] = {MODE_NO + 3, NUMPIXELS - (MAXBRIGHTNESS / STEPBRIGHTNESS) - 3};
+    int hueSection[] = {NUMPIXELS - (MAXBRIGHTNESS / STEPBRIGHTNESS), (MAXBRIGHTNESS / STEPBRIGHTNESS)};
 
     // Show current Mode
     pixels.fill(grey, modeSection[0], modeSection[1]);

@@ -7,13 +7,15 @@
  *  @param color Color of blinking
  */
 
-void pulseOutside(uint8_t activePixels)
+void pulseOutside(uint16_t activePixels, uint16_t lastActivePixels)
 {
-
+    if (activePixels > lastActivePixels)
+    {
+        pixels.clear();
+        pixels.show();
+    }
     pixels.fill(colorPalletteRGB, 0, (activePixels / 2));
     pixels.fill(colorPalletteRGB, MIDDLE + (MIDDLE - (activePixels / 2)), (activePixels / 2));
-    pixels.show();
-    pixels.clear();
     pixels.show();
 }
 

@@ -33,10 +33,13 @@ void setup()
 */
 uint8_t minSession = 255;
 uint8_t maxSession = 0;
+uint16_t lastActivePixelRatio = 0;
+uint16_t activePixelRatio = 0;
 void loop()
 {
   checkButtonPress();
   float grooveSignal = 0.; // variable to save microphone signal
+  lastActivePixelRatio = map(grooveSignal, minSession, maxSession, 1, NUMPIXELS);
   grooveSignal = sampling();
 
   if (grooveSignal < minSession)
@@ -47,7 +50,7 @@ void loop()
 
   fadeRGB(stepsize);
   soundTemperature(grooveSignal);
-  uint16_t activePixelRatio = map(grooveSignal, minSession, maxSession, 1, NUMPIXELS);
+  activePixelRatio = map(grooveSignal, minSession, maxSession, 1, NUMPIXELS);
 
   switch (LEDModeValue)
   {
@@ -61,10 +64,10 @@ void loop()
     pulseRTOL(activePixelRatio);
     break;
   case 3: // go from middle to right and left
-    pulseMiddle(activePixelRatio);
+    pulseMiddle(activePixelRatio, lastActivePixelRatio);
     break;
   case 4: // go from outside right and left to middle
-    pulseOutside(activePixelRatio);
+    pulseOutside(activePixelRatio, lastActivePixelRatio);
     break;
   case 5: // switch beween even and odd pixels
     alterNate();
